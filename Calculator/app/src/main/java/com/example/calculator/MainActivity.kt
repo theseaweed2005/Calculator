@@ -39,14 +39,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
-
 @Composable
 fun CalculatorScreen(modifier: Modifier = Modifier) {
-    var number by remember{ mutableStateOf("")}
+    var number by remember { mutableStateOf("") }
+    var firstNumber by remember { mutableStateOf("") }
+    var operation by remember { mutableStateOf<String?>(null) }
 
-    var buttonClick: () -> Unit = {}
     Column(
         modifier = modifier
             .padding(8.dp)
@@ -54,7 +52,8 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = number)
+        Text(text = number, modifier = Modifier.padding(bottom = 16.dp))
+
         Row {
             Button(onClick = { number = "" }) {
                 Text(text = "C")
@@ -65,10 +64,15 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             Button(onClick = { /*TODO*/ }) {
                 Text(text = "%")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                firstNumber = number
+                operation = "/"
+                number = ""
+            }) {
                 Text(text = "÷")
             }
         }
+
         Row {
             Button(onClick = { number += "7" }) {
                 Text(text = "7")
@@ -79,10 +83,15 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             Button(onClick = { number += "9" }) {
                 Text(text = "9")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                firstNumber = number
+                operation = "*"
+                number = ""
+            }) {
                 Text(text = "x")
             }
         }
+
         Row {
             Button(onClick = { number += "4" }) {
                 Text(text = "4")
@@ -93,10 +102,15 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             Button(onClick = { number += "6" }) {
                 Text(text = "6")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                firstNumber = number
+                operation = "-"
+                number = ""
+            }) {
                 Text(text = "-")
             }
         }
+
         Row {
             Button(onClick = { number += "1" }) {
                 Text(text = "1")
@@ -107,24 +121,49 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             Button(onClick = { number += "3" }) {
                 Text(text = "3")
             }
-            Button(onClick = {/*Todo*/}) {
+            Button(onClick = {
+                firstNumber = number
+                operation = "+"
+                number = ""
+            }) {
                 Text(text = "+")
             }
         }
+
         Row {
             Button(onClick = { number += "0" }) {
                 Text(text = "0")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                if (!number.contains(".")) {
+                    number += "."
+                }
+            }) {
                 Text(text = ".")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                if (operation != null && firstNumber.isNotEmpty() && number.isNotEmpty()) {
+                    val result = when (operation) {
+                        "+" -> firstNumber.toDouble() + number.toDouble()
+                        "-" -> firstNumber.toDouble() - number.toDouble()
+                        "*" -> firstNumber.toDouble() * number.toDouble()
+                        "/" -> {
+                            if (number.toDouble() != 0.0) {
+                                firstNumber.toDouble() / number.toDouble()
+                        } else {
+                            "Erro"
+                        }                        }
+                        else -> 0.0
+                    }
+                    number = result.toString()
+                    operation = null
+                    firstNumber = ""
+                } else {
+                    number = "Error"
+                }
+            }) {
                 Text(text = "=")
             }
         }
     }
 }
-
-
-
-
