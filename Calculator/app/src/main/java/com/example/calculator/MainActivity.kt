@@ -97,18 +97,19 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             }
             Button(
                 onClick = {
-                  //  if (number.isEmpty() || number.last() == '(') {
-                 //       number += "("
-                 //   } else {
-                  //      number += ")"
-                  //  }
-                    number = "Don't"
+                    if (number.isNotEmpty()) {
+                        if (number.startsWith("-")) {
+                            number = number.substring(1)
+                        } else {
+                            number = "-$number"
+                        }
+                    }
                 },
                 modifier = buttonModifier,
                 colors = ButtonDefaults.buttonColors(containerColor = Pinkie2),
                 shape = buttonShape
             ) {
-                Text(text = "()", fontSize = 30.sp)
+                Text(text = "±", fontSize = 30.sp)
             }
 
             Button(onClick = {
